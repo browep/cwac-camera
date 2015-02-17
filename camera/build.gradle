@@ -30,12 +30,12 @@ android.libraryVariants.all { variant ->
   def task = project.tasks.create "jar${name.capitalize()}", Jar
   task.dependsOn variant.javaCompile
   task.from variant.javaCompile.destinationDir
-  task.baseName = "cwac-${PUBLISH_ARTIFACT_ID}"
-  task.version = PUBLISH_VERSION
+  task.baseName = "cwac"
+  task.version = 1//PUBLISH_VERSION
   task.exclude('com/commonsware/cwac/**/BuildConfig.**')
 }
 
-apply plugin: 'maven'
+/*apply plugin: 'maven'
  
 uploadArchives {
     repositories.mavenDeployer {
@@ -45,5 +45,5 @@ uploadArchives {
 
         repository(url: LOCAL_REPO)
     }
-}
+}*/
 
