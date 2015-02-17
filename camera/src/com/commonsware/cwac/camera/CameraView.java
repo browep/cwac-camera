@@ -363,7 +363,8 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
       recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
       getHost().configureRecorderProfile(cameraId, recorder);
       getHost().configureRecorderOutput(cameraId, recorder);
-      recorder.setOrientationHint(outputOrientation);
+        // cast to landscape, only thing that seems to work
+      recorder.setOrientationHint(0);
       previewStrategy.attach(recorder);
       recorder.prepare();
       recorder.start();
