@@ -294,4 +294,8 @@ public class CameraFragment extends Fragment {
   public void setFlashMode(String mode) {
     cameraView.setFlashMode(mode);
   }
+
+    public CameraView getCameraView() {
+        return cameraView;
+    }
 }

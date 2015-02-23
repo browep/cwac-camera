@@ -713,4 +713,14 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
       }
     }
   }
+
+    public boolean enableShutterSound(boolean enable) {
+        Camera.CameraInfo info=new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        if(info.canDisableShutterSound) {
+            camera.enableShutterSound(enable);
+        }
+
+        return info.canDisableShutterSound;
+    }
 }
