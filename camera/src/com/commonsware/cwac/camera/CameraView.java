@@ -51,6 +51,7 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
   private boolean isDetectingFaces=false;
   private boolean isAutoFocusing=false;
   private int lastPictureOrientation=-1;
+    private CameraReadyListener cameraReadyListener;
 
   public CameraView(Context context) {
     super(context);
@@ -116,6 +117,7 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
               && getHost() instanceof Camera.FaceDetectionListener) {
             camera.setFaceDetectionListener((Camera.FaceDetectionListener)getHost());
           }
+
         }
         catch (Exception e) {
           getHost().onCameraFail(FailureReason.UNKNOWN);
@@ -527,6 +529,9 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
 
       camera.setParameters(getHost().adjustPreviewParameters(parameters));
       startPreview();
+        if(cameraReadyListener != null) {
+            cameraReadyListener.onCameraReady(camera);
+        }
     }
   }
 
@@ -715,12 +720,24 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
   }
 
     public boolean enableShutterSound(boolean enable) {
-        Camera.CameraInfo info=new Camera.CameraInfo();
-        Camera.getCameraInfo(cameraId, info);
-        if(info.canDisableShutterSound) {
-            camera.enableShutterSound(enable);
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            CameraInfo info=new CameraInfo();
+            Camera.getCameraInfo(cameraId, info);
+            if(info.canDisableShutterSound) {
+                camera.enableShutterSound(enable);
+            }
 
-        return info.canDisableShutterSound;
+            return info.canDisableShutterSound;
+        } else {
+            return false;
+        }
+    }
+
+    public void setCameraReadyListener(CameraReadyListener cameraReadyListener) {
+        this.cameraReadyListener = cameraReadyListener;
+    }
+
+    public interface CameraReadyListener {
+        public void onCameraReady(Camera camera);
     }
 }

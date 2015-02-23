@@ -36,6 +36,7 @@ public class CameraFragment extends Fragment {
   private CameraView cameraView=null;
   private CameraHost host=null;
 
+
   /*
    * (non-Javadoc)
    * 
