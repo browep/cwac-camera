@@ -719,6 +719,7 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
     }
   }
 
+    @TargetApi(17)
     public boolean enableShutterSound(boolean enable) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             CameraInfo info=new CameraInfo();
