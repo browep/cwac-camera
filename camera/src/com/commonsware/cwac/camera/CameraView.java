@@ -19,6 +19,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
@@ -32,7 +33,13 @@ import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.MessageFormat;
+
 import com.commonsware.cwac.camera.CameraHost.FailureReason;
 
 public class CameraView extends ViewGroup implements AutoFocusCallback {
@@ -307,8 +314,11 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
           setCameraPictureOrientation(pictureParams);
         }
 
-        camera.setParameters(xact.host.adjustPictureParameters(xact,
-                                                               pictureParams));
+        camera.stopPreview();
+        Camera.Parameters params = xact.host.adjustPictureParameters(xact, pictureParams);
+        Log.d(TAG, "params.getPictureSize(): " + params.getPictureSize().height + "x" + params.getPictureSize().width);
+        camera.setParameters(params);
+        camera.startPreview();
         xact.cameraView=this;
 
         postDelayed(new Runnable() {
@@ -541,7 +551,7 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
     getHost().autoFocusAvailable();
   }
 
-  private void stopPreview() {
+  public void stopPreview() {
     inPreview=false;
     getHost().autoFocusUnavailable();
     camera.stopPreview();
