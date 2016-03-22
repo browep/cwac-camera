@@ -18,6 +18,7 @@ package com.commonsware.cwac.camera;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
@@ -26,6 +27,7 @@ import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.CameraInfo;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,6 +43,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import com.commonsware.cwac.camera.CameraHost.FailureReason;
+import com.github.browep.privatephotovault.base.Constants;
 
 public class CameraView extends ViewGroup implements AutoFocusCallback {
   static final String TAG="CWAC-Camera";
@@ -549,6 +552,7 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
     camera.startPreview();
     inPreview=true;
     getHost().autoFocusAvailable();
+    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(Constants.CAMERA_READY));
   }
 
   public void stopPreview() {

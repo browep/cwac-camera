@@ -35,6 +35,12 @@ android.libraryVariants.all { variant ->
   task.exclude('com/commonsware/cwac/**/BuildConfig.**')
 }
 
+dependencies {
+    compile 'com.android.support:support-v13:23.1.1'
+    compile project(':libraries:ppv-base')
+
+}
+
 /*apply plugin: 'maven'
  
 uploadArchives {

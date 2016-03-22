@@ -16,12 +16,23 @@ package com.commonsware.cwac.camera;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.github.browep.privatephotovault.BreakInCameraHost;
+import com.github.browep.privatephotovault.base.Constants;
+
+import java.awt.font.TextAttribute;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -33,6 +44,7 @@ import java.io.IOException;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CameraFragment extends Fragment {
+  private static final String TAG = CameraFragment.class.getCanonicalName();
   private CameraView cameraView=null;
   private CameraHost host=null;
 
@@ -64,7 +76,19 @@ public class CameraFragment extends Fragment {
     super.onResume();
 
     cameraView.onResume();
+
+    LocalBroadcastManager.getInstance(getActivity()).registerReceiver(takePictureReceiver, new IntentFilter(Constants.TAKE_PICTURE));
   }
+
+  private BroadcastReceiver takePictureReceiver = new BroadcastReceiver() {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      String tempOutFileStr = intent.getStringExtra(Constants.PICTURE_OUT_FILE);
+      Log.d(TAG, "taking picture to: " + tempOutFileStr);
+      getCameraView().enableShutterSound(false);
+      takePicture(new PictureTransaction(new BreakInCameraHost(getActivity(), new File(tempOutFileStr))));
+    }
+  };
 
   /*
    * (non-Javadoc)
@@ -73,6 +97,13 @@ public class CameraFragment extends Fragment {
    */
   @Override
   public void onPause() {
+
+    try {
+      LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(takePictureReceiver);
+    } catch (Exception e) {
+      Log.e(TAG, e.getMessage(), e);
+    }
+
     if (isRecording()) {
       try {
         stopRecording();
