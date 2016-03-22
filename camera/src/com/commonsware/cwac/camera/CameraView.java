@@ -552,7 +552,8 @@ public class CameraView extends ViewGroup implements AutoFocusCallback {
     camera.startPreview();
     inPreview=true;
     getHost().autoFocusAvailable();
-    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(Constants.CAMERA_READY));
+    Intent intent = new Intent(Constants.CAMERA_READY);
+    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
   }
 
   public void stopPreview() {

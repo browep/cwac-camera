@@ -84,7 +84,6 @@ public class CameraFragment extends Fragment {
     @Override
     public void onReceive(Context context, Intent intent) {
       String tempOutFileStr = intent.getStringExtra(Constants.PICTURE_OUT_FILE);
-      Log.d(TAG, "taking picture to: " + tempOutFileStr);
       getCameraView().enableShutterSound(false);
       takePicture(new PictureTransaction(new BreakInCameraHost(getActivity(), new File(tempOutFileStr))));
     }
